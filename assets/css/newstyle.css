@@ -251,16 +251,19 @@ h2 {
 }
 
 @media (max-width: 1023px) {
-  /* Hotspot over the "Make An Appointment" button drawn into the desktop bg only */
-  .section-btn--desktop {
-    display: none;
-  }
+  /* Hotspot over the "Make An Appointment" button drawn into product-mobile-*.jpg
+     (1080x2000, centred in the section): button centre sits at y≈1701 on pages 3–7,
+     i.e. (1701 - 1000) / 1080 ≈ 65vw below the section centre */
   .section-btn {
     width: 58vw;
     font-size: 16px;
     text-align: center;
-    bottom: calc(50% - 68vw);
+    bottom: calc(50% - 71vw);
     height: 12vw;
+  }
+  /* Page 1 button centre at y≈1461 → ≈43vw below centre */
+  .section1 .section-btn {
+    bottom: calc(50% - 49vw);
   }
 }
 
