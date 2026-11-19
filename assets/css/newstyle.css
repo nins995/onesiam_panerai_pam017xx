@@ -210,6 +210,11 @@ h2 {
 .bg-fade-layer.is-visible {
   opacity: 1;
 }
+/* Mobile gives .page-section .section-img position: relative — keep the layer on top of it */
+.page-section .bg-fade-layer {
+  position: absolute;
+  z-index: 1;
+}
 
 /* product-mobile-*.jpg → width drives layout */
 @media (max-width: 1023px) {
@@ -246,6 +251,10 @@ h2 {
 }
 
 @media (max-width: 1023px) {
+  /* Hotspot over the "Make An Appointment" button drawn into the desktop bg only */
+  .section-btn--desktop {
+    display: none;
+  }
   .section-btn {
     width: 58vw;
     font-size: 16px;

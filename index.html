@@ -147,6 +147,7 @@
 
       <div class="form-container right">
       </div>
+      <a href="#section8" class="section-btn section-btn--desktop"></a>
     </section>
 
     <!-- Section 4 -->
@@ -198,6 +199,7 @@
 
       <div class="form-container right">
       </div>
+      <a href="#section8" class="section-btn section-btn--desktop"></a>
     </section>
 
     <!-- Section 6 (with form) -->
@@ -233,6 +235,7 @@
 
       <div class="form-container right">
       </div>
+      <a href="#section8" class="section-btn section-btn--desktop"></a>
     </section>
 
     <!-- Section 7 (with form) -->
@@ -299,6 +302,7 @@
 
       <div class="form-container right">
       </div>
+      <a href="#section8" class="section-btn section-btn--desktop"></a>
     </section>
 
     <!-- Section 8 (with form) -->
@@ -437,6 +441,7 @@
           bgMobileSourceId,
           bgMobileImages = [],
           bgFade = false,
+          bgFadeMobile = false,
         }) {
           const sliderEl = document.getElementById(sliderId);
           if (!sliderEl) return;
@@ -469,48 +474,62 @@
           }
 
 
-          // Mobile bg: swap the <picture> <source> and the blurred top/bottom strips (--bg-mobile)
-          function updateMobileBg() {
-            const src = bgMobileImages[current];
+          function setDesktopBg(src) {
+            if (src && bgImg) bgImg.src = src;
+          }
+
+          // Mobile bg: the <picture> <source> + the blurred top/bottom strips (--bg-mobile)
+          function setMobileBg(src) {
             if (!src || !bgMobileSource) return;
-            if (bgMobileSource.getAttribute("srcset") === src) return;
             bgMobileSource.srcset = src;
             sectionEl.style.setProperty("--bg-mobile", `url("${new URL(src, document.baseURI).href}")`);
           }
 
-          // Desktop bg — on mobile the <picture> <source> takes over
+          // Swap the bg for the current slide. The variant that isn't on screen (desktop vs
+          // mobile) is swapped instantly so a resize still shows the right slide; the visible
+          // one crossfades when enabled (bgFade on desktop, bgFadeMobile on mobile).
           function updateBg(animate = true) {
-            const src = bgImages[current];
-            if (!src || !bgImg) return;
+            if (!bgImg) return;
+            const onMobile = mobileQuery.matches;
+            const desktopSrc = bgImages[current];
+            const mobileSrc = bgMobileImages[current];
 
             // Finish any fade still running before starting a new one
             if (fadeLayer) {
               fadeLayer.remove();
               fadeLayer = null;
             }
-            if (bgImg.getAttribute("src") === src) return;
 
-            if (!bgFade || !animate || mobileQuery.matches) {
-              bgImg.src = src;
-              return;
-            }
+            if (onMobile) setDesktopBg(desktopSrc);
+            else setMobileBg(mobileSrc);
 
-            // Crossfade: fade a copy with the new image in on top, then swap
+            const src = onMobile ? mobileSrc : desktopSrc;
+            const shown = onMobile ? bgMobileSource && bgMobileSource.getAttribute("srcset") : bgImg.getAttribute("src");
+            const commit = onMobile ? () => setMobileBg(mobileSrc) : () => setDesktopBg(desktopSrc);
+            if (!src || shown === src) return;
+            if (!animate || !(onMobile ? bgFadeMobile : bgFade)) return commit();
+
+            // Crossfade: fade a copy with the new image in on top, then swap the real bg
             const layer = bgImg.cloneNode();
             layer.removeAttribute("id");
             layer.classList.add("bg-fade-layer");
             layer.src = src;
-            bgImg.closest(".page-section").appendChild(layer);
+            sectionEl.appendChild(layer);
             fadeLayer = layer;
 
+            let finished = false;
             function finish() {
-              if (fadeLayer !== layer) return;
-              bgImg.src = src;
-              whenLoaded(bgImg, () => {
+              if (finished || fadeLayer !== layer) return;
+              finished = true;
+              commit();
+              // Let the real bg load/paint the new image before uncovering it
+              const reveal = () => {
                 if (fadeLayer !== layer) return;
                 layer.remove();
                 fadeLayer = null;
-              });
+              };
+              bgImg.addEventListener("load", reveal, { once: true });
+              setTimeout(reveal, 300);
             }
 
             whenLoaded(layer, () => {
@@ -527,7 +546,6 @@
             setTransform(current * -100, animate);
             updateArrows();
             updateBg(animate);
-            updateMobileBg();
           }
 
           arrowLeft.addEventListener("click", () => goToSlide(current - 1));
@@ -585,12 +603,14 @@
           arrowLeftId: "sliderArrowLeft",
           arrowRightId: "sliderArrowRight",
           bgImgId: "section2Bg",
+          bgFade: true,
           bgImages: [
             "./assets/images/product/product-2-1.jpg",
             "./assets/images/product/product-2-2.jpg",
             "./assets/images/product/product-2-3.jpg",
           ],
           bgMobileSourceId: "section2BgMobile",
+          bgFadeMobile: true,
           bgMobileImages: [
             "./assets/images/product/product-mobile-2-1.jpg",
             "./assets/images/product/product-mobile-2-2.jpg",
@@ -610,6 +630,7 @@
             "./assets/images/product/product-3-3.jpg",
           ],
           bgMobileSourceId: "section3BgMobile",
+          bgFadeMobile: true,
           bgMobileImages: [
             "./assets/images/product/product-mobile-3-1.jpg",
             "./assets/images/product/product-mobile-3-2.jpg",
@@ -630,6 +651,7 @@
             "./assets/images/product/product-5-3.jpg",
           ],
           bgMobileSourceId: "section5BgMobile",
+          bgFadeMobile: true,
           bgMobileImages: [
             "./assets/images/product/product-mobile-5-1.jpg",
             "./assets/images/product/product-mobile-5-2.jpg",
@@ -650,6 +672,7 @@
             "./assets/images/product/product-6-3.jpg",
           ],
           bgMobileSourceId: "section6BgMobile",
+          bgFadeMobile: true,
           bgMobileImages: [
             "./assets/images/product/product-mobile-6-1.jpg",
             "./assets/images/product/product-mobile-6-2.jpg",
