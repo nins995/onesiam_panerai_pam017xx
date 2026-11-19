@@ -1,0 +1,960 @@
+/* === Fonts === */
+@font-face {
+  font-family: "MyriadVariableConcept-Roman";
+  src: url("../fonts/MyriadVariableConcept-Roman.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  font-family: "Helvetica Neue", sans-serif;
+  margin: 0;
+  height: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-y: auto; /* Allow vertical scroll */
+  scroll-snap-type: y mandatory;
+  background-color: #0d1429;
+}
+
+h1,
+h2 {
+  font-family: "MyriadVariableConcept-Roman", sans-serif;
+}
+.font-Roman {
+  font-family: "MyriadVariableConcept-Roman", sans-serif;
+}
+
+/* === Sticky Icons === */
+.sticky-icon {
+  position: fixed;
+  z-index: 1000;
+  width: auto;
+}
+.sticky-icon.left {
+  left: 20px;
+  padding-top: 25px;
+}
+.sticky-icon.right {
+  padding-top: 8px;
+  right: 20px;
+}
+
+@media (max-width: 1023px) {
+  .sticky-icon {
+    top: 10px;
+  }
+  .sticky-icon.left {
+    left: 10px;
+    padding-top: 12px;
+    padding-bottom: 16px;
+  }
+  .sticky-icon.right {
+    right: 10px;
+  }
+}
+
+@media only screen and (width: 1024px) and (orientation: portrait) {
+  .sticky-icon {
+    top: 10px;
+  }
+  .sticky-icon.left {
+    left: 10px;
+  }
+  .sticky-icon.right {
+    right: 10px;
+  }
+}
+
+/* === Per-logo height overrides === */
+/* Desktop */
+.logo-product {
+  height: 85px;
+  top: 3px;
+}
+.logo-paragon {
+  height: 85px;
+  top: 6px;
+}
+
+/* Mobile */
+@media (max-width: 743px) {
+  .logo-product {
+    height: 55px;
+  }
+  .logo-paragon {
+    height: 40px;
+  }
+}
+
+/* Tablet Portrait */
+@media only screen and (min-width: 744px) and (max-width: 1199px) and (orientation: portrait) {
+  .logo-product {
+    height: 70px;
+  }
+  .logo-paragon {
+    top: 15px;
+    height: 50px;
+  }
+  .section1 .section-img {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+  }
+}
+
+/* Tablet Landscape */
+@media only screen and (min-width: 744px) and (max-width: 1199px) and (orientation: landscape) {
+  .logo-product {
+    height: 80px;
+  }
+  .logo-paragon {
+    top: 15px;
+    height: 50px;
+  }
+}
+
+/* === Page Sections === */
+.page-section {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scroll-snap-align: start;
+  overflow: hidden;
+}
+
+/* === Mobile blurred background (fills top/bottom gaps) === */
+.section1 { --bg-mobile: url('../images/product/product-mobile-1.jpg'); }
+.section2 { --bg-mobile: url('../images/product/product-mobile-2-1.jpg'); }
+.section3 { --bg-mobile: url('../images/product/product-mobile-3-1.jpg'); }
+.section5 { --bg-mobile: url('../images/product/product-mobile-5-1.jpg'); }
+.section6 { --bg-mobile: url('../images/product/product-mobile-6-1.jpg'); }
+.section7 { --bg-mobile: url('../images/product/product-mobile-7.jpg'); }
+.section4 { --bg-mobile: url('../images/product/product-mobile-4.jpg'); }
+.section8 { --bg-mobile: url('../images/product/product-mobile-8.jpg'); }
+.section-submitted { --bg-mobile: url('../images/product/product-mobile-11.jpg'); }
+
+@media (max-width: 1023px) {
+  /* Top strip — stretches top ~3% of the image to fill the gap */
+  .page-section::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    height: calc(22% + 20px);
+    background-image: var(--bg-mobile);
+    background-size: 100% 3333%;
+    background-position: top center;
+    filter: blur(25px) brightness(0.7);
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  }
+
+  /* Bottom strip — stretches bottom ~3% of the image to fill the gap */
+  .page-section::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    right: -20px;
+    height: calc(22% + 20px);
+    background-image: var(--bg-mobile);
+    background-size: 100% 3333%;
+    background-position: bottom center;
+    filter: blur(25px) brightness(0.7);
+    z-index: 0;
+    -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
+    mask-image: linear-gradient(to top, black 50%, transparent 100%);
+  }
+
+  .page-section .section-img {
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-section .form-container {
+    z-index: 2;
+  }
+}
+
+/* === Section Images === */
+.section-img {
+  height: 100vh;
+  height: 100dvh;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Slider bg crossfade layer — sits exactly over .section-img, under the slider/form */
+.bg-fade-layer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.bg-fade-layer.is-visible {
+  opacity: 1;
+}
+
+/* product-mobile-*.jpg → width drives layout */
+@media (max-width: 1023px) {
+  .section-img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+  }
+}
+
+/* === Section Buttons === */
+.section-btn {
+  position: absolute;
+  bottom: 6vh;
+  height: 7vh;
+  left: 50%;
+  width: 43vh;
+  transform: translateX(-50%);
+  padding: 12px 30px;
+  font-size: 18px;
+  color: #fff;
+  background-color: transparent;
+  border-radius: 8px;
+  text-decoration: none;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.transparent-btn {
+  padding: 0;
+  width: 100%;
+  background: none;
+  border: none;
+}
+
+@media (max-width: 1023px) {
+  .section-btn {
+    width: 58vw;
+    font-size: 16px;
+    text-align: center;
+    bottom: calc(50% - 68vw);
+    height: 12vw;
+  }
+}
+
+@media only screen and (width: 1024px) and (orientation: portrait) {
+  .section-btn {
+    width: 56vw;
+    font-size: 16px;
+    text-align: center;
+    bottom: calc(50% - 68vw + 50px);
+    height: 9vw;
+  }
+}
+
+/* === Form Containers Common === */
+.form-container {
+  position: absolute;
+  top: 50%;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+
+/* Section 8 form images — desktop */
+.section8 .form-container.left .form-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 25px;
+  display: block;
+}
+.section8 .form-container.left .form-image-1 { width: 36vh; }
+.section8 .form-container.left .form-image-2 {
+  width: 54vh;
+  max-width: unset;
+  margin-left: calc((40vh - 54vh) / 2);
+  margin-right: calc((40vh - 54vh) / 2);
+}
+
+.form-container.left .form-image {
+  width: 100%;
+  margin: auto;
+}
+
+/* Form content */
+.form-container .form-content {
+  width: 100%;
+}
+
+.section2 .form-container.right .form-content {
+  width: 100%;
+}
+.section3 .form-container.right .form-content {
+  width: 100%;
+}
+.section5 .form-container.right .form-content {
+  width: 100%;
+}
+.section6 .form-container.right .form-content {
+  width: 100%;
+}
+.section7 .form-container.right .form-content {
+  width: 100%;
+}
+
+.section8 .form-container.left .form-content {
+  width: 100%;
+}
+
+/* Checkbox Label Gray */
+.form-check-label {
+  color: #888;
+  font-size: 14px;
+  font-family: "MyriadVariableConcept-Roman", sans-serif;
+}
+
+@media (max-width: 1023px) {
+  .form-check-label {
+    font-size: 10px;
+  }
+}
+
+.form-check-input {
+  width: 12px; /* default 1rem (16px), you can reduce more */
+  height: 12px; /* remove border */
+  border-radius: 0 !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+.form-check {
+  padding-left: 0 !important; /* remove Bootstrap padding */
+  margin-left: 0 !important;
+  display: flex;
+  align-items: center; /* vertical alignment */
+  gap: 8px; /* spacing between box + text */
+}
+
+/* === Product Slider (Section 2, left side) === */
+.product-slider {
+  position: absolute;
+  top: 50%;
+  left: 39%;
+  transform: translate(-50%, -50%);
+  width: 72vh;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  cursor: grab;
+  user-select: none;
+}
+.product-slider:active {
+  cursor: grabbing;
+}
+
+.product-slider .slider-track {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.product-slider .slider-track-inner {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  transition: transform 0.5s ease;
+}
+
+.product-slider .slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Empty slide — keeps the track width/height so arrows stay apart and the area is draggable */
+.product-slider .slide-empty {
+  aspect-ratio: 1 / 1;
+}
+
+.product-slider {
+  flex-direction: row;
+  gap: 12px;
+}
+
+.product-slider .slider-arrow {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.product-slider .slider-arrow img {
+  width: 80px;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+
+.product-slider .slider-track {
+  flex: 1 1 auto;
+}
+
+/* Section 2 desktop — arrows frame the watch case in product-2-{1,2,3}.jpg.
+   Same math as below: case center sits at ~32.5% of image width (50% - 40.5vh)
+   and ~35% of its height; case is ~40.5vh wide. */
+@media (min-width: 1024px) {
+  .section2 .product-slider {
+    top: 35%;
+    left: calc(50% - 40.5vh);
+    width: calc(48vh + 184px); /* case (~40.5vh) + breathing room + 2 arrows (80px) & gaps (12px) */
+    max-width: none;
+  }
+}
+
+/* Sections 3/5/6/7 desktop — arrows frame the watch case in product-{n}-{1,2,3}.jpg.
+   The bg is 100vh tall and centered, so 1% of image width = 2.3148vh
+   (2500x1080). Case center sits at ~31% of image width → 50% - 44vh. */
+@media (min-width: 1024px) {
+  .section3 .product-slider {
+    left: calc(50% - 44vh);
+    width: calc(58vh + 184px); /* case (~51vh) + breathing room + 2 arrows (80px) & gaps (12px) */
+    max-width: none;
+  }
+  /* product-5-{1,2,3}.jpg: case ≈ 31% x / 47% y, ~24vh wide (worn on a wrist, so smaller) */
+  .section5 .product-slider {
+    top: 47%;
+    left: calc(50% - 44vh);
+    width: calc(32vh + 184px);
+    max-width: none;
+  }
+  /* product-6-{1,2,3}.jpg: case ≈ 31% x / 40% y, ~43vh wide */
+  .section6 .product-slider {
+    top: 40%;
+    left: calc(50% - 43.4vh);
+    width: calc(50vh + 184px);
+    max-width: none;
+  }
+}
+
+/* === Section 7 slider — full-frame PNG slides (product-7-s1..s6.png) ===
+   Slides are 2500x1080 transparent overlays the same size as product-7.jpg,
+   so each slide image is drawn exactly over the bg (100vh tall, centered;
+   full width = 231.48vh). The visible window is the strip between the arrows:
+   image x 18%–82% → 148.15vh wide. Arrows sit at image x 15.75% / 84.25% (per ref),
+   i.e. 5.2vh outside the window. On narrow screens the window shrinks so the
+   arrows stay on-screen. */
+.section7 .product-slider .slide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .section7 .product-slider {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(148.15vh, calc(100% - 22vh));
+    max-width: none;
+    height: 100%;
+    display: block;
+  }
+  .section7 .product-slider .slider-track {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .section7 .product-slider .slider-track-inner {
+    height: 100%;
+    align-items: stretch;
+  }
+  .section7 .product-slider .slide {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+  /* Window = 64% of the image width → image = window / 0.64 = 156.25%.
+     On wide screens that equals the full bg (231.48vh) so slides line up with it;
+     on narrow screens the slide scales down so its text still fits the window. */
+  .section7 .product-slider .slide img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 156.25%;
+    height: auto;
+    max-width: none;
+  }
+  .section7 .product-slider .slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .section7 .product-slider .arrow-left { left: -5.2vh; }
+  .section7 .product-slider .arrow-right { left: calc(100% + 5.2vh); }
+  .section7 .product-slider .slider-arrow img {
+    width: 10vh;
+  }
+}
+
+@media (max-width: 1023px) {
+  .product-slider {
+    position: absolute;
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 78%;
+    gap: 6px;
+  }
+  .product-slider .slider-arrow img {
+    width: 34px;
+  }
+  /* Section 2 mobile — arrows frame the watch case in product-mobile-2-{1,2,3}.jpg.
+     Image is 100vw wide (1080x2000 → 185.2vw tall), centered vertically.
+     Case center ≈ 50% x / 30% y of the image → 50% - 37vw; case ≈ 39vw wide. */
+  .section2 .product-slider {
+    top: calc(50% - 37vw);
+    width: calc(46vw + 80px); /* case + breathing room + 2 arrows (34px) & gaps (6px) */
+  }
+  /* Section 3 mobile — same math for product-mobile-3-{1,2,3}.jpg:
+     case center ≈ 50% x / 31% y → 50% - 35.2vw; case ≈ 51vw wide. */
+  .section3 .product-slider {
+    top: calc(50% - 35.2vw);
+    width: calc(58vw + 80px);
+  }
+  /* Section 5 mobile — product-mobile-5-{1,2,3}.jpg: case ≈ 50% x / 31% y, ~29vw wide */
+  .section5 .product-slider {
+    top: calc(50% - 34.8vw);
+    width: calc(36vw + 80px);
+  }
+  /* Section 6 mobile — product-mobile-6-{1,2,3}.jpg: case ≈ 50% x / 31% y, ~43vw wide */
+  .section6 .product-slider {
+    top: calc(50% - 35.6vw);
+    width: calc(50vw + 80px);
+  }
+  /* Section 7 mobile — full-frame PNG slides (product-mobile-7-1..6.png) over
+     product-mobile-7.jpg. Both are 1080x2000 at 100vw wide (185.2vw tall), centered.
+     Window = image x 8%–92% (84vw); slide text spans ~9%–91%, content center ≈ 43% y.
+     Arrows sit at image x 4.5% / 95.5%, i.e. 3.5vw outside the window
+     (keeps the 34px arrow fully on-screen). */
+  .section7 .product-slider {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 84vw;
+    height: 185.2vw;
+    display: block;
+  }
+  .section7 .product-slider .slider-track {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .section7 .product-slider .slider-track-inner {
+    height: 100%;
+    align-items: stretch;
+  }
+  .section7 .product-slider .slide {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+  .section7 .product-slider .slide img {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: auto;
+    max-width: none;
+  }
+  .section7 .product-slider .slider-arrow {
+    position: absolute;
+    top: 43%;
+    transform: translate(-50%, -50%);
+  }
+  .section7 .product-slider .arrow-left { left: -3.5vw; }
+  .section7 .product-slider .arrow-right { left: calc(100% + 3.5vw); }
+  .section3 .form-container.right {
+    top: 68%;
+  }
+  .section5 .form-container.right {
+    top: 68%;
+  }
+  .section6 .form-container.right {
+    top: 68%;
+  }
+  .section7 .form-container.right {
+    top: 68%;
+  }
+}
+
+/* === Section 2 Right-Half Form === */
+.section2 .form-container.right {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 48vh;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+.section3 .form-container.right {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 48vh;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+.section5 .form-container.right {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 48vh;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+.section6 .form-container.right {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 48vh;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+.section7 .form-container.right {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 48vh;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+/* === Section 8 Form — desktop: right side of product-8.jpg (per design ref) ===
+   bg is 100vh tall & centered → 1% of image width = 2.3148vh. Form center sits
+   at ~69% of image width (50% + 44.5vh) and ~56% of its height; clamped so it
+   never runs off-screen on narrow viewports. */
+.section8 .form-container.left {
+  position: absolute;
+  top: 56%;
+  left: min(calc(50% + 44.5vh), calc(100% - 20vh - 20px));
+  transform: translate(-50%, -50%);
+  width: 40vh;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+/* Left-half form */
+.form-container.left {
+  position: absolute;
+  top: 50%; /* vertical center */
+  transform: translate(-50%, -50%); /* center horizontally and vertically */
+  width: 50%; /* occupy left half */
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+/* === Mobile Responsive for Forms === */
+@media (max-width: 1023px) {
+  .form-container .form-content {
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Left form fully centered */
+  .form-container.left {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: none;
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+
+  /* Section 2 form — lower half, in the black area below the caption
+     (image y ≥ ~63% → 50% + 24vw) */
+  .section2 .form-container.right {
+    left: 50%;
+    top: calc(50% + 24vw);
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: none;
+  }
+  .section3 .form-container.right {
+    left: 50%;
+    top: 45%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: none;
+  }
+  .section5 .form-container.right {
+    left: 50%;
+    top: 45%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: none;
+  }
+  .section6 .form-container.right {
+    left: 50%;
+    top: 45%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: none;
+  }
+  .section7 .form-container.right {
+    left: 50%;
+    top: 45%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: none;
+  }
+  .section2 .form-container.right .form-content {
+    width: 85% !important;
+  }
+  .section3 .form-container.right .form-content {
+    width: 85% !important;
+  }
+  .section5 .form-container.right .form-content {
+    width: 85% !important;
+  }
+  .section6 .form-container.right .form-content {
+    width: 85% !important;
+  }
+  .section7 .form-container.right .form-content {
+    width: 85% !important;
+  }
+
+  /* Section 8 left form */
+  .section8 .form-container.left {
+    left: 50%;
+    top: 51%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: none;
+  }
+  .section8 .form-container.left .form-image { margin-bottom: 0; }
+  .section8 .form-container.left .form-image-1 { width: 60%; }
+  .section8 .form-container.left .form-image-2 { width: 100%; max-width: 90%; }
+  .section8 .form-container.left .form-content {
+    width: 85% !important;
+  }
+}
+
+@media only screen and (width: 1024px) and (orientation: portrait) {
+  .form-container .form-content {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  /* Left form fully centered */
+  .form-container.left {
+    left: 0;
+    transform: unset;
+    width: 100%;
+    max-width: none;
+    padding-left: 10%;
+    padding-right: 10%;
+    top: unset;
+  }
+
+  /* Section 2 right form */
+  .section2 .form-container.right {
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: 500px;
+  }
+  .section3 .form-container.right {
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: 500px;
+  }
+  .section5 .form-container.right {
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: 500px;
+  }
+  .section6 .form-container.right {
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: 500px;
+  }
+  .section7 .form-container.right {
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: 500px;
+  }
+
+  /* Section 8 left form */
+  .section8 .form-container.left {
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 30px;
+    max-width: 500px;
+  }
+  .section8 .form-container.left .form-image-1 { width: 100%; }
+  .section8 .form-container.left .form-image-2 { width: 100%; }
+}
+
+
+@media only screen and (width: 768px) and (orientation: portrait) {
+  .section8 .form-container.left .form-image-2 {
+    width: 50%;
+  }
+
+  .section8 .form-container.left .form-image-1 {
+    width: 40%;
+  }
+
+  .section2 .form-container.right .form-content,
+  .section3 .form-container.right .form-content,
+  .section5 .form-container.right .form-content,
+  .section6 .form-container.right .form-content,
+  .section7 .form-container.right .form-content,
+  .section8 .form-container.left .form-content {
+    width: 50% !important;
+  }
+}
+
+
+/* Inputs */
+.form-control {
+  background: transparent !important;
+  height: 42px;
+  border: 1px solid #a49090 !important;
+  color: #fff !important;
+  border-radius: 0 !important;
+}
+
+/* Placeholder */
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Focus */
+.form-control:focus {
+  background: transparent !important;
+  border-color: #fff !important;
+  color: #fff !important;
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+}
+
+@media (max-width: 1023px) {
+  .form-control {
+    height: 28px;
+  }
+}
+
+@media only screen and (width: 1024px) and (orientation: portrait) {
+  .form-container .form-content {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .form-container.left {
+    position: absolute;
+    top: unset;
+    left: unset;
+    transform: unset;
+    width: 130vh;
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    z-index: 2;
+  }
+}
