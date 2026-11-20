@@ -382,10 +382,14 @@ h2 {
   flex-direction: column;
   align-items: center;
   z-index: 2;
-  cursor: grab;
   user-select: none;
+  touch-action: manipulation; /* fast taps on the arrows shouldn't double-tap zoom */
 }
-.product-slider:active {
+/* Grab cursor only where mouse drag is enabled (JS adds .is-draggable) */
+.product-slider.is-draggable {
+  cursor: grab;
+}
+.product-slider.is-draggable:active {
   cursor: grabbing;
 }
 

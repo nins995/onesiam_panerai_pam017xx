@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./assets/css/newstyle.css?v=2.3" />
+    <link rel="stylesheet" href="./assets/css/newstyle.css?v=2.5" />
   </head>
 
   <body>
@@ -449,6 +449,7 @@
           bgFade = false,
           bgFadeMobile = false,
           titleId,
+          mouseDrag = true,
         }) {
           const sliderEl = document.getElementById(sliderId);
           if (!sliderEl) return;
@@ -465,6 +466,7 @@
           const mobileQuery = window.matchMedia("(max-width: 1023px)");
           let fadeLayer = null;
           let current = 0;
+          let trackBusyUntil = 0; // slide transform (0.5s) still running until then
 
           // Preload so switching bg doesn't flash
           [...bgImages, ...bgMobileImages].forEach((src) => {
@@ -563,8 +565,20 @@
             updateTitle();
           }
 
-          arrowLeft.addEventListener("click", () => goToSlide(current - 1));
-          arrowRight.addEventListener("click", () => goToSlide(current + 1));
+          // Step one slide, but ignore it while the previous slide/bg animation is still
+          // running — fast clicks would otherwise skip slides and cut the bg crossfade short.
+          // Returns whether the slide changed.
+          function changeSlide(step) {
+            const target = Math.max(0, Math.min(slideCount - 1, current + step));
+            const now = performance.now();
+            if (target === current || fadeLayer || now < trackBusyUntil) return false;
+            trackBusyUntil = now + 500;
+            goToSlide(target);
+            return true;
+          }
+
+          arrowLeft.addEventListener("click", () => changeSlide(-1));
+          arrowRight.addEventListener("click", () => changeSlide(1));
 
           // Drag / swipe to slide (touch + mouse)
           let startX = 0;
@@ -588,13 +602,10 @@
             if (!isDragging) return;
             isDragging = false;
             const threshold = 15; // percent of track width
-            if (dragOffsetPercent < -threshold) {
-              goToSlide(current + 1);
-            } else if (dragOffsetPercent > threshold) {
-              goToSlide(current - 1);
-            } else {
-              goToSlide(current);
-            }
+            const step = dragOffsetPercent < -threshold ? 1 : dragOffsetPercent > threshold ? -1 : 0;
+            // Too short a drag, or still animating → snap the track back (leave the bg alone,
+            // so a tap on an arrow mid-fade doesn't restart the crossfade)
+            if (!step || !changeSlide(step)) setTransform(current * -100);
             dragOffsetPercent = 0;
           }
 
@@ -602,12 +613,16 @@
           sliderEl.addEventListener("touchmove", (e) => dragMove(e.touches[0].clientX), { passive: true });
           sliderEl.addEventListener("touchend", dragEnd);
 
-          sliderEl.addEventListener("mousedown", (e) => {
-            e.preventDefault();
-            dragStart(e.clientX);
-          });
-          window.addEventListener("mousemove", (e) => dragMove(e.clientX));
-          window.addEventListener("mouseup", dragEnd);
+          // Mouse drag is opt-out per slider (desktop arrows only)
+          if (mouseDrag) {
+            sliderEl.classList.add("is-draggable");
+            sliderEl.addEventListener("mousedown", (e) => {
+              e.preventDefault();
+              dragStart(e.clientX);
+            });
+            window.addEventListener("mousemove", (e) => dragMove(e.clientX));
+            window.addEventListener("mouseup", dragEnd);
+          }
 
           goToSlide(0, false);
         }
@@ -618,6 +633,7 @@
           arrowLeftId: "sliderArrowLeft",
           arrowRightId: "sliderArrowRight",
           bgImgId: "section2Bg",
+          mouseDrag: false,
           bgFade: true,
           titleId: "section2Title",
           bgImages: [
@@ -640,6 +656,7 @@
           arrowLeftId: "sliderArrowLeft3",
           arrowRightId: "sliderArrowRight3",
           bgImgId: "section3Bg",
+          mouseDrag: false,
           bgFade: true,
           bgImages: [
             "./assets/images/product/product-3-1.jpg",
@@ -661,6 +678,7 @@
           arrowLeftId: "sliderArrowLeft5",
           arrowRightId: "sliderArrowRight5",
           bgImgId: "section5Bg",
+          mouseDrag: false,
           bgFade: true,
           bgImages: [
             "./assets/images/product/product-5-1.jpg",
@@ -682,6 +700,7 @@
           arrowLeftId: "sliderArrowLeft6",
           arrowRightId: "sliderArrowRight6",
           bgImgId: "section6Bg",
+          mouseDrag: false,
           bgFade: true,
           bgImages: [
             "./assets/images/product/product-6-1.jpg",
