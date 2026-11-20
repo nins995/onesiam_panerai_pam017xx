@@ -226,12 +226,17 @@ h2 {
 }
 
 /* === Section Buttons === */
+/* Desktop: product-*.jpg (2500x1080) fills 100dvh, button drawn at y 966–1035
+   (89.4–95.8%) and 454px (42vh) wide, centred horizontally */
 .section-btn {
   position: absolute;
-  bottom: 6vh;
+  bottom: 3.9vh;
+  bottom: 3.9dvh;
   height: 7vh;
+  height: 7dvh;
   left: 50%;
   width: 43vh;
+  width: 43dvh;
   transform: translateX(-50%);
   padding: 12px 30px;
   font-size: 18px;
@@ -290,19 +295,21 @@ h2 {
 }
 
 
-/* Section 8 form images — desktop */
+/* Section 8 form images — desktop (per ref): product-8-text1.png ≈ 57vh wide above the
+   inputs (45vh), product-8-text2.png ≈ 60vh wide below the button. Both are wider than
+   the form, so negative side margins let them overflow it evenly. */
 .section8 .form-container.left .form-image {
-  max-width: 100%;
+  max-width: none;
   height: auto;
-  margin-bottom: 25px;
   display: block;
 }
-.section8 .form-container.left .form-image-1 { width: 36vh; }
+.section8 .form-container.left .form-image-1 {
+  width: 57vh;
+  margin: 0 calc((45vh - 57vh) / 2) 2vh;
+}
 .section8 .form-container.left .form-image-2 {
-  width: 54vh;
-  max-width: unset;
-  margin-left: calc((40vh - 54vh) / 2);
-  margin-right: calc((40vh - 54vh) / 2);
+  width: 60vh;
+  margin: 4vh calc((45vh - 60vh) / 2) 0;
 }
 
 .form-container.left .form-image {
@@ -643,6 +650,27 @@ h2 {
   align-items: center;
   z-index: 2;
 }
+
+/* Section 2 title above the form — product-2-text{1,2,3}.png (613x36), one per slide,
+   stacked in the same cell and crossfaded by the slider. Desktop ref: ~57vh wide
+   (wider than the form, overflows it evenly) with ~4.5vh gap above the inputs. */
+.form-title {
+  display: grid;
+  width: 57vh;
+  max-width: none;
+  margin-bottom: 4.5vh;
+}
+.form-title img {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.6s ease; /* match .bg-fade-layer */
+}
+.form-title img.is-active {
+  opacity: 1;
+}
+
 .section3 .form-container.right {
   position: absolute;
   top: 50%;
@@ -698,14 +726,15 @@ h2 {
 
 /* === Section 8 Form — desktop: right side of product-8.jpg (per design ref) ===
    bg is 100vh tall & centered → 1% of image width = 2.3148vh. Form center sits
-   at ~69% of image width (50% + 44.5vh) and ~56% of its height; clamped so it
-   never runs off-screen on narrow viewports. */
+   at ~69% of image width (50% + 44.5vh) and ~56% of its height; clamped so the
+   widest line (text2, 60vh) never runs off-screen on narrow viewports.
+   Width = 45vh inputs + 2 × 20px padding. */
 .section8 .form-container.left {
   position: absolute;
   top: 56%;
-  left: min(calc(50% + 44.5vh), calc(100% - 20vh - 20px));
+  left: min(calc(50% + 44.5vh), calc(100% - 30vh - 20px));
   transform: translate(-50%, -50%);
-  width: 40vh;
+  width: calc(45vh + 40px);
   padding: 20px;
   border-radius: 8px;
   display: flex;
@@ -794,6 +823,11 @@ h2 {
   .section2 .form-container.right .form-content {
     width: 85% !important;
   }
+  /* Title spans the same width as the form block, small gap above the inputs */
+  .section2 .form-title {
+    width: 85%;
+    margin-bottom: 10px;
+  }
   .section3 .form-container.right .form-content {
     width: 85% !important;
   }
@@ -807,20 +841,20 @@ h2 {
     width: 85% !important;
   }
 
-  /* Section 8 left form */
+  /* Section 8 left form — per ref, in the black area of product-mobile-8.jpg
+     (image y ≈ 63% → 50% + 24vw): text1 ≈ 57vw, inputs ≈ 45vw, text2 ≈ 60vw */
   .section8 .form-container.left {
     left: 50%;
-    top: 51%;
+    top: calc(50% + 24vw);
     transform: translateX(-50%);
     width: 100%;
     padding: 0 30px;
     max-width: none;
   }
-  .section8 .form-container.left .form-image { margin-bottom: 0; }
-  .section8 .form-container.left .form-image-1 { width: 60%; }
-  .section8 .form-container.left .form-image-2 { width: 100%; max-width: 90%; }
+  .section8 .form-container.left .form-image-1 { width: 57vw; margin: 0 auto 1vw; }
+  .section8 .form-container.left .form-image-2 { width: 60vw; margin: 4vw auto 0; }
   .section8 .form-container.left .form-content {
-    width: 85% !important;
+    width: calc(45vw + 40px) !important; /* + 2 × 20px padding */
   }
 }
 
@@ -848,6 +882,10 @@ h2 {
     width: 100%;
     padding: 0 30px;
     max-width: 500px;
+  }
+  .section2 .form-title {
+    width: 100%;
+    margin-bottom: 12px;
   }
   .section3 .form-container.right {
     left: 50%;
@@ -891,8 +929,8 @@ h2 {
     padding: 0 30px;
     max-width: 500px;
   }
-  .section8 .form-container.left .form-image-1 { width: 100%; }
-  .section8 .form-container.left .form-image-2 { width: 100%; }
+  .section8 .form-container.left .form-image-1 { width: 100%; margin: 0 0 12px; }
+  .section8 .form-container.left .form-image-2 { width: 100%; margin: 16px 0 0; }
 }
 
 

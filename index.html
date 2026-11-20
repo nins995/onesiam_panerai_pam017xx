@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./assets/css/newstyle.css?v=2.1" />
+    <link rel="stylesheet" href="./assets/css/newstyle.css?v=2.3" />
   </head>
 
   <body>
@@ -74,6 +74,12 @@
       </div>
 
       <div class="form-container right">
+        <!-- Title per slide — the slider switches the active one -->
+        <div class="form-title" id="section2Title">
+          <img src="./assets/images/product/product-2-text1.png" class="is-active" alt="Discover the New Luminor PAM01710" />
+          <img src="./assets/images/product/product-2-text2.png" alt="Discover the New Luminor PAM01711" />
+          <img src="./assets/images/product/product-2-text3.png" alt="Discover the New Luminor PAM01714" />
+        </div>
         <form class="form-content" id="form1">
           <div class="mb-2">
             <input
@@ -363,7 +369,7 @@
         </form>
         <img
           src="./assets/images/product/product-8-text2.png"
-          class="form-image form-image-2 mb-0 mt-1 mt-md-3"
+          class="form-image form-image-2"
           alt="Image"
         />
       </div>
@@ -442,6 +448,7 @@
           bgMobileImages = [],
           bgFade = false,
           bgFadeMobile = false,
+          titleId,
         }) {
           const sliderEl = document.getElementById(sliderId);
           if (!sliderEl) return;
@@ -452,6 +459,8 @@
           const arrowRight = document.getElementById(arrowRightId);
           const bgImg = document.getElementById(bgImgId);
           const bgMobileSource = document.getElementById(bgMobileSourceId);
+          const titleEl = document.getElementById(titleId);
+          const titles = titleEl ? titleEl.querySelectorAll("img") : [];
           const sectionEl = sliderEl.closest(".page-section");
           const mobileQuery = window.matchMedia("(max-width: 1023px)");
           let fadeLayer = null;
@@ -541,11 +550,17 @@
             });
           }
 
+          // Show the title image for the current slide (crossfades via .form-title CSS)
+          function updateTitle() {
+            titles.forEach((img, i) => img.classList.toggle("is-active", i === current));
+          }
+
           function goToSlide(index, animate = true) {
             current = Math.max(0, Math.min(slideCount - 1, index));
             setTransform(current * -100, animate);
             updateArrows();
             updateBg(animate);
+            updateTitle();
           }
 
           arrowLeft.addEventListener("click", () => goToSlide(current - 1));
@@ -604,6 +619,7 @@
           arrowRightId: "sliderArrowRight",
           bgImgId: "section2Bg",
           bgFade: true,
+          titleId: "section2Title",
           bgImages: [
             "./assets/images/product/product-2-1.jpg",
             "./assets/images/product/product-2-2.jpg",
@@ -624,6 +640,7 @@
           arrowLeftId: "sliderArrowLeft3",
           arrowRightId: "sliderArrowRight3",
           bgImgId: "section3Bg",
+          bgFade: true,
           bgImages: [
             "./assets/images/product/product-3-1.jpg",
             "./assets/images/product/product-3-2.jpg",
